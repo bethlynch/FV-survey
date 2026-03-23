@@ -281,51 +281,40 @@
   .results-hero .score-label { font-size: 0.82rem; opacity: 0.75; letter-spacing: 0.06em; text-transform: uppercase; }
   .results-hero .score-subtitle { margin-top: 10px; font-size: 0.92rem; opacity: 0.88; }
 
-  .score-split { display: flex; gap: 12px; margin: 16px 0; }
+  /* Paired score + feedback rows */
+  .paired-row {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin: 14px 0;
+  }
   .score-box {
-    flex: 1;
     background: white;
     border-radius: var(--radius);
-    padding: 18px 12px;
+    padding: 16px 12px;
     text-align: center;
     box-shadow: var(--shadow);
+    flex-shrink: 0;
+    width: 100px;
   }
-  .score-box .num { font-family: 'Fraunces', serif; font-size: 2rem; font-weight: 700; line-height: 1; }
+  .score-box .num { font-family: 'Fraunces', serif; font-size: 1.8rem; font-weight: 700; line-height: 1; }
   .score-box.fruit-box .num { color: var(--orange); }
   .score-box.veg-box .num   { color: var(--green); }
-  .score-box .lbl { font-size: 0.72rem; color: var(--mid); margin-top: 5px; text-transform: uppercase; letter-spacing: 0.05em; }
-  .score-box .icon { font-size: 1.4rem; margin-bottom: 6px; }
+  .score-box.soda-box .num  { color: var(--soda-color); }
+  .score-box.break-box .num { color: var(--breakfast-color); }
+  .score-box .lbl { font-size: 0.68rem; color: var(--mid); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.04em; line-height: 1.3; }
+  .score-box .icon { font-size: 1.3rem; margin-bottom: 5px; }
 
-  .extra-scores { display: flex; gap: 12px; margin: 0 0 16px; }
-  .extra-box {
+  .guidance-card.inline {
     flex: 1;
-    background: white;
+    margin: 0;
+    padding: 14px 16px;
     border-radius: var(--radius);
-    padding: 14px 12px;
-    text-align: center;
-    box-shadow: var(--shadow);
+    font-size: 0.84rem;
+    line-height: 1.55;
   }
-  .extra-box .num { font-family: 'Fraunces', serif; font-size: 1.6rem; font-weight: 700; }
-  .extra-box.soda-box .num  { color: var(--soda-color); }
-  .extra-box.break-box .num { color: var(--breakfast-color); }
-  .extra-box .lbl { font-size: 0.70rem; color: var(--mid); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.04em; line-height: 1.3; }
-  .extra-box .icon { font-size: 1.1rem; margin-bottom: 4px; }
 
-  .breakdown-card {
-    background: white;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 20px;
-    margin: 16px 0;
-  }
-  .breakdown-card h3 { font-family: 'Fraunces', serif; font-size: 1rem; margin-bottom: 14px; color: var(--dark); }
 
-  .bar-item { margin-bottom: 12px; }
-  .bar-top { display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 4px; color: var(--mid); }
-  .bar-track { height: 8px; background: #edf2ee; border-radius: 99px; overflow: hidden; }
-  .bar-fill { height: 100%; border-radius: 99px; transition: width 0.8s ease; }
-  .bar-fill.fruit { background: var(--orange); }
-  .bar-fill.veg   { background: var(--green-light); }
 
   .guidance-card {
     border-radius: var(--radius);
@@ -337,25 +326,10 @@
   .guidance-card.low  { background: #fff3e0; border-left: 4px solid #ff9800; }
   .guidance-card.mid  { background: #e8f5e9; border-left: 4px solid var(--green-light); }
   .guidance-card.high { background: var(--green-pale); border-left: 4px solid var(--green); }
-  .guidance-card h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 6px; }
+  .guidance-card h4 { font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; }
 
 
 
-  .restart-btn {
-    width: 100%;
-    background: white;
-    color: var(--green);
-    border: 2px solid var(--green);
-    padding: 13px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.95rem;
-    font-weight: 500;
-    margin-top: 8px;
-    transition: all 0.2s;
-  }
-  .restart-btn:hover { background: var(--green-pale); }
 
 
   .submit-status {
@@ -532,64 +506,60 @@
       <div class="score-subtitle" id="scoreSubtitle"></div>
     </div>
 
-    <div class="score-split">
+    <div class="disclaimer-note">
+      📊 This score measures how <em>often</em> you ate fruits and vegetables, not the amount. Both matter for good health. Use this as a starting point for reflection, not a precise nutritional assessment.
+    </div>
+
+    <div class="paired-row">
       <div class="score-box fruit-box">
         <div class="icon">🍎</div>
         <div class="num" id="fruitScore">—</div>
         <div class="lbl">Fruit / day</div>
       </div>
+      <div class="guidance-card inline" id="fruitGuidance">
+        <h4 id="fruitGuidanceTitle"></h4>
+        <p id="fruitGuidanceText"></p>
+      </div>
+    </div>
+
+    <div class="paired-row">
       <div class="score-box veg-box">
         <div class="icon">🥦</div>
         <div class="num" id="vegScore">—</div>
         <div class="lbl">Vegetables / day</div>
       </div>
+      <div class="guidance-card inline" id="vegGuidance">
+        <h4 id="vegGuidanceTitle"></h4>
+        <p id="vegGuidanceText"></p>
+      </div>
     </div>
 
-    <div class="extra-scores">
-      <div class="extra-box soda-box">
+    <div class="paired-row">
+      <div class="score-box soda-box extra-box">
         <div class="icon">🥤</div>
         <div class="num" id="sodaScore">—</div>
         <div class="lbl">Soda / day</div>
       </div>
-      <div class="extra-box break-box">
+      <div class="guidance-card inline" id="sodaGuidance">
+        <h4 id="sodaGuidanceTitle"></h4>
+        <p id="sodaGuidanceText"></p>
+      </div>
+    </div>
+
+    <div class="paired-row">
+      <div class="score-box break-box extra-box">
         <div class="icon">🍳</div>
         <div class="num" id="breakfastScore">—</div>
         <div class="lbl">Breakfast days / week</div>
       </div>
-    </div>
-
-    <div class="breakdown-card">
-      <h3>Fruit &amp; Vegetable Breakdown</h3>
-      <div id="breakdownBars"></div>
-    </div>
-
-    <div class="disclaimer-note">
-      📊 This score measures how <em>often</em> you ate fruits and vegetables, not the amount. Both matter for good health. Use this as a starting point for reflection, not a precise nutritional assessment.
-    </div>
-
-    <div class="guidance-card" id="fruitGuidance">
-      <h4 id="fruitGuidanceTitle"></h4>
-      <p id="fruitGuidanceText"></p>
-    </div>
-
-    <div class="guidance-card" id="vegGuidance">
-      <h4 id="vegGuidanceTitle"></h4>
-      <p id="vegGuidanceText"></p>
-    </div>
-
-    <div class="guidance-card" id="sodaGuidance">
-      <h4 id="sodaGuidanceTitle"></h4>
-      <p id="sodaGuidanceText"></p>
-    </div>
-
-    <div class="guidance-card" id="breakGuidance">
-      <h4 id="breakGuidanceTitle"></h4>
-      <p id="breakGuidanceText"></p>
+      <div class="guidance-card inline" id="breakGuidance">
+        <h4 id="breakGuidanceTitle"></h4>
+        <p id="breakGuidanceText"></p>
+      </div>
     </div>
 
                       </div>
 
-    <button class="restart-btn" onclick="restartSurvey()">↩ Take Survey Again</button>
 
     <footer>
       Based on the CDC Youth Risk Behavior Surveillance System (YRBSS) dietary questions.<br>
@@ -714,16 +684,6 @@
     showQ(1);
   }
 
-  function restartSurvey() {
-    Object.keys(answers).forEach(k => delete answers[k]);
-    document.getElementById('participantID').value = '';
-    document.getElementById('participantName').value = '';
-    document.getElementById('results').style.display = 'none';
-    document.getElementById('surveySection').style.display = 'none';
-    document.getElementById('introSection').style.display = 'block';
-    document.getElementById('progressFill').style.width = '0%';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
 
   // ── Google Sheets endpoint ──────────────────────────────────────────
   const SHEET_URL = 'https://script.google.com/macros/s/AKfycbw5swzGEBEGVCGG5TOvZ0XOrpzX6MJd-S-goL2mnckHzfbdw4eJtNXMmUcOzYjGblVI8A/exec';
@@ -763,22 +723,6 @@
     document.getElementById('scoreSubtitle').textContent =
       subtitles.length ? '⚠️ ' + subtitles.join(' · ') : '✓ Eating fruits & vegetables daily';
 
-    // Breakdown bars
-    const items = [
-      { label: '🍎 Fruit',           val: fruit,  cls: 'fruit' },
-      { label: '🥗 Green salad',     val: salad,  cls: 'veg' },
-      { label: '🥔 Potatoes',        val: potato, cls: 'veg' },
-      { label: '🥕 Carrots',         val: carrot, cls: 'veg' },
-      { label: '🥦 Other vegetables',val: otherV, cls: 'veg' },
-    ];
-    const maxVal = Math.max(...items.map(i => i.val), 0.5);
-    document.getElementById('breakdownBars').innerHTML = items.map(item => {
-      const pct = Math.min(100, Math.round((item.val / maxVal) * 100));
-      return `<div class="bar-item">
-        <div class="bar-top"><span>${item.label}</span><span>${fmt(item.val)}/day</span></div>
-        <div class="bar-track"><div class="bar-fill ${item.cls}" style="width:${pct}%"></div></div>
-      </div>`;
-    }).join('');
 
     // ── Feedback: Fruit ──
     const fruitCard = document.getElementById('fruitGuidance');
