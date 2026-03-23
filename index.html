@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Fruits & Vegetables Survey</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+
+  :root {
+    --green: #2d6a4f;
+    --green-light: #52b788;
+    --green-pale: #d8f3dc;
+    --orange: #e76f51;
+    --orange-pale: #fde8e0;
+    --cream: #fefae0;
+    --dark: #1b2f1e;
+    --mid: #5a7a5e;
+    --border: #b7d6bc;
+    --radius: 14px;
+    --shadow: 0 4px 24px rgba(29,70,40,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--dark);
+    min-height: 100vh;
+    padding: 0 0 60px 0;
+  }
+
+  header {
+    background: var(--green);
+    color: white;
+    padding: 28px 24px 22px;
+    text-align: center;
+  }
+
+  header h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.7rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+
+  header p {
+    font-size: 0.88rem;
+    opacity: 0.82;
+    font-weight: 300;
+  }
+
+  .progress-bar {
+    height: 5px;
+    background: rgba(255,255,255,0.25);
+    position: relative;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--green-light);
+    transition: width 0.4s ease;
+    border-radius: 0 3px 3px 0;
+  }
+
+  .container { max-width: 520px; margin: 0 auto; padding: 0 16px; }
+
+  .intro-card {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 28px 24px;
+    margin: 24px 0 16px;
+    border-left: 5px solid var(--green-light);
+  }
+  .intro-card p { font-size: 0.92rem; line-height: 1.65; color: var(--mid); }
+  .intro-card strong { color: var(--dark); }
+
+  .question-card {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 24px 20px 20px;
+    margin: 16px 0;
+    display: none;
+    animation: slideIn 0.3s ease;
+  }
+  .question-card.active { display: block; }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .q-badge {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+  .fruit-badge { background: var(--orange-pale); color: var(--orange); }
+  .veg-badge   { background: var(--green-pale);  color: var(--green); }
+
+  .q-icon {
+    font-size: 2.2rem;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .q-text {
+    font-family: 'Fraunces', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 6px;
+    color: var(--dark);
+  }
+
+  .q-hint {
+    font-size: 0.80rem;
+    color: var(--mid);
+    margin-bottom: 18px;
+    line-height: 1.5;
+  }
+
+  .freq-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+    align-items: center;
+  }
+
+  .freq-row label {
+    font-size: 0.78rem;
+    color: var(--mid);
+    width: 56px;
+    flex-shrink: 0;
+    font-weight: 500;
+  }
+
+  .freq-row input[type="number"] {
+    flex: 1;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 1rem;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--dark);
+    background: #f8fdf9;
+    transition: border-color 0.2s;
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+  .freq-row input::-webkit-outer-spin-button,
+  .freq-row input::-webkit-inner-spin-button { -webkit-appearance: none; }
+  .freq-row input:focus {
+    outline: none;
+    border-color: var(--green-light);
+    background: white;
+  }
+
+  .never-check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 6px;
+    padding: 10px 12px;
+    background: #f5f5f5;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.88rem;
+    color: var(--mid);
+    border: 1.5px solid transparent;
+    transition: all 0.2s;
+  }
+  .never-check:hover { border-color: var(--border); }
+  .never-check input { width: 16px; height: 16px; accent-color: var(--green); cursor: pointer; }
+  .never-check.checked { background: var(--green-pale); border-color: var(--green-light); color: var(--green); }
+
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .btn {
+    flex: 1;
+    padding: 13px 20px;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.18s;
+  }
+  .btn-primary {
+    background: var(--green);
+    color: white;
+  }
+  .btn-primary:hover { background: #245a42; transform: translateY(-1px); }
+  .btn-secondary {
+    background: transparent;
+    color: var(--mid);
+    border: 1.5px solid var(--border);
+  }
+  .btn-secondary:hover { background: var(--green-pale); }
+
+  /* Results */
+  #results { display: none; }
+
+  .results-hero {
+    background: var(--green);
+    color: white;
+    border-radius: var(--radius);
+    padding: 30px 24px;
+    margin: 24px 0 16px;
+    text-align: center;
+    box-shadow: var(--shadow);
+  }
+  .results-hero .big-score {
+    font-family: 'Fraunces', serif;
+    font-size: 4rem;
+    font-weight: 700;
+    line-height: 1;
+    margin: 10px 0 4px;
+  }
+  .results-hero .score-label {
+    font-size: 0.82rem;
+    opacity: 0.75;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .results-hero .score-subtitle {
+    margin-top: 10px;
+    font-size: 0.92rem;
+    opacity: 0.88;
+  }
+
+  .score-split {
+    display: flex;
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .score-box {
+    flex: 1;
+    background: white;
+    border-radius: var(--radius);
+    padding: 18px 16px;
+    text-align: center;
+    box-shadow: var(--shadow);
+  }
+  .score-box .num {
+    font-family: 'Fraunces', serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .score-box.fruit-box .num { color: var(--orange); }
+  .score-box.veg-box .num   { color: var(--green); }
+  .score-box .lbl {
+    font-size: 0.78rem;
+    color: var(--mid);
+    margin-top: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .score-box .icon { font-size: 1.5rem; margin-bottom: 6px; }
+
+  .breakdown-card {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px;
+    margin: 16px 0;
+  }
+  .breakdown-card h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 1rem;
+    margin-bottom: 14px;
+    color: var(--dark);
+  }
+
+  .bar-item {
+    margin-bottom: 12px;
+  }
+  .bar-top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.82rem;
+    margin-bottom: 4px;
+    color: var(--mid);
+  }
+  .bar-track {
+    height: 8px;
+    background: #edf2ee;
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 0.8s ease;
+  }
+  .bar-fill.fruit { background: var(--orange); }
+  .bar-fill.veg   { background: var(--green-light); }
+
+  .guidance-card {
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    margin: 16px 0;
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+  .guidance-card.low  { background: #fff3e0; border-left: 4px solid #ff9800; }
+  .guidance-card.mid  { background: #e8f5e9; border-left: 4px solid var(--green-light); }
+  .guidance-card.high { background: var(--green-pale); border-left: 4px solid var(--green); }
+  .guidance-card h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 6px; }
+
+  .org-section {
+    background: #1b2f1e;
+    color: white;
+    border-radius: var(--radius);
+    padding: 22px 20px;
+    margin: 20px 0;
+    font-size: 0.85rem;
+  }
+  .org-section h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 1rem;
+    margin-bottom: 12px;
+    opacity: 0.9;
+  }
+  .org-section .data-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 7px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    font-size: 0.82rem;
+  }
+  .org-section .data-row .val { font-weight: 600; color: var(--green-light); }
+
+  .copy-btn {
+    width: 100%;
+    margin-top: 14px;
+    background: rgba(255,255,255,0.1);
+    color: white;
+    border: 1.5px solid rgba(255,255,255,0.2);
+    padding: 11px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    transition: all 0.2s;
+  }
+  .copy-btn:hover { background: rgba(255,255,255,0.18); }
+
+  .restart-btn {
+    width: 100%;
+    background: white;
+    color: var(--green);
+    border: 2px solid var(--green);
+    padding: 13px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin-top: 8px;
+    transition: all 0.2s;
+  }
+  .restart-btn:hover { background: var(--green-pale); }
+
+  .step-indicator {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--mid);
+    margin: 10px 0 0;
+    letter-spacing: 0.04em;
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--dark);
+    color: white;
+    padding: 10px 22px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    z-index: 999;
+  }
+  .toast.show { opacity: 1; }
+
+  footer {
+    text-align: center;
+    font-size: 0.72rem;
+    color: #aaa;
+    padding: 20px 16px 0;
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Fruits &amp; Vegetables Check-In</h1>
+  <p>Quick survey — takes about 2 minutes</p>
+</header>
+<div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+
+<div class="container">
+
+  <!-- INTRO -->
+  <div id="introSection">
+    <div class="intro-card">
+      <p>We're going to ask you <strong>6 short questions</strong> about how often you ate or drank fruits and vegetables <strong>over the past 30 days</strong>.</p>
+      <br>
+      <p>Think about all forms — fresh, frozen, canned, cooked or raw — and include meals and snacks at home and away from home.</p>
+    </div>
+
+    <div class="question-card active" style="display:block; margin-top:0;">
+      <div class="q-text" style="font-size:0.98rem; margin-bottom:16px;">Before we begin</div>
+
+      <div style="margin-bottom:14px;">
+        <label style="display:block; font-size:0.82rem; font-weight:500; color:var(--mid); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.05em;">
+          Participant ID <span style="color:var(--orange)">*</span>
+        </label>
+        <input type="text" id="participantID" placeholder="Enter your ID number"
+          style="width:100%; border:1.5px solid var(--border); border-radius:8px; padding:11px 14px; font-size:1rem; font-family:'DM Sans',sans-serif; color:var(--dark); background:#f8fdf9; transition:border-color 0.2s;"
+          onfocus="this.style.borderColor='var(--green-light)'; this.style.background='white';"
+          onblur="this.style.borderColor='var(--border)'; this.style.background='#f8fdf9';">
+        <div id="idError" style="display:none; color:var(--orange); font-size:0.78rem; margin-top:5px;">Please enter a participant ID to continue.</div>
+      </div>
+
+      <div style="margin-bottom:6px;">
+        <label style="display:block; font-size:0.82rem; font-weight:500; color:var(--mid); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.05em;">
+          Name <span style="font-size:0.75rem; font-weight:400; color:#aaa;">(optional)</span>
+        </label>
+        <input type="text" id="participantName" placeholder="First name or full name"
+          style="width:100%; border:1.5px solid var(--border); border-radius:8px; padding:11px 14px; font-size:1rem; font-family:'DM Sans',sans-serif; color:var(--dark); background:#f8fdf9; transition:border-color 0.2s;"
+          onfocus="this.style.borderColor='var(--green-light)'; this.style.background='white';"
+          onblur="this.style.borderColor='var(--border)'; this.style.background='#f8fdf9';">
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="startSurvey()">Start Survey →</button>
+    </div>
+    <p class="step-indicator">6 questions · ~2 minutes</p>
+  </div>
+
+  <!-- QUESTIONS -->
+  <div id="surveySection" style="display:none">
+    <div class="step-indicator" id="stepIndicator">Question 1 of 6</div>
+
+    <!-- Q1: Fruit Juice -->
+    <div class="question-card active" id="q1">
+      <span class="q-badge fruit-badge">Fruit</span>
+      <span class="q-icon">🍊</span>
+      <div class="q-text">How often did you drink 100% pure fruit juice?</div>
+      <div class="q-hint">Examples: orange juice, apple juice, grape juice. Do <em>not</em> include fruit drinks with added sugar (like Hi-C, lemonade, or Kool-Aid).</div>
+      <div class="freq-row"><label>Per day</label><input type="number" id="q1d" min="0" placeholder="0" oninput="clearNever(1)"></div>
+      <div class="freq-row"><label>Per week</label><input type="number" id="q1w" min="0" placeholder="0" oninput="clearNever(1)"></div>
+      <div class="freq-row"><label>Per month</label><input type="number" id="q1m" min="0" placeholder="0" oninput="clearNever(1)"></div>
+      <label class="never-check" id="never1" onclick="toggleNever(1)">
+        <input type="checkbox" id="never1cb"> I never drink fruit juice
+      </label>
+      <div class="btn-row"><button class="btn btn-primary" onclick="nextQ(1)">Next →</button></div>
+    </div>
+
+    <!-- Q2: Fruit -->
+    <div class="question-card" id="q2">
+      <span class="q-badge fruit-badge">Fruit</span>
+      <span class="q-icon">🍎</span>
+      <div class="q-text">How often did you eat fruit? (Not counting juice)</div>
+      <div class="q-hint">Include fresh, frozen, or canned fruit. Examples: apples, bananas, oranges, berries, watermelon, grapes, mango.</div>
+      <div class="freq-row"><label>Per day</label><input type="number" id="q2d" min="0" placeholder="0" oninput="clearNever(2)"></div>
+      <div class="freq-row"><label>Per week</label><input type="number" id="q2w" min="0" placeholder="0" oninput="clearNever(2)"></div>
+      <div class="freq-row"><label>Per month</label><input type="number" id="q2m" min="0" placeholder="0" oninput="clearNever(2)"></div>
+      <label class="never-check" id="never2" onclick="toggleNever(2)">
+        <input type="checkbox" id="never2cb"> I never eat fruit
+      </label>
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="prevQ(2)">← Back</button>
+        <button class="btn btn-primary" onclick="nextQ(2)">Next →</button>
+      </div>
+    </div>
+
+    <!-- Q3: Beans -->
+    <div class="question-card" id="q3">
+      <span class="q-badge veg-badge">Vegetable</span>
+      <span class="q-icon">🫘</span>
+      <div class="q-text">How often did you eat cooked or canned beans?</div>
+      <div class="q-hint">Include refried beans, black beans, kidney beans, lentils, chickpeas, edamame, tofu, bean soup, hummus. Do <em>not</em> include green beans.</div>
+      <div class="freq-row"><label>Per day</label><input type="number" id="q3d" min="0" placeholder="0" oninput="clearNever(3)"></div>
+      <div class="freq-row"><label>Per week</label><input type="number" id="q3w" min="0" placeholder="0" oninput="clearNever(3)"></div>
+      <div class="freq-row"><label>Per month</label><input type="number" id="q3m" min="0" placeholder="0" oninput="clearNever(3)"></div>
+      <label class="never-check" id="never3" onclick="toggleNever(3)">
+        <input type="checkbox" id="never3cb"> I never eat beans
+      </label>
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="prevQ(3)">← Back</button>
+        <button class="btn btn-primary" onclick="nextQ(3)">Next →</button>
+      </div>
+    </div>
+
+    <!-- Q4: Dark Green Veg -->
+    <div class="question-card" id="q4">
+      <span class="q-badge veg-badge">Vegetable</span>
+      <span class="q-icon">🥦</span>
+      <div class="q-text">How often did you eat dark green vegetables?</div>
+      <div class="q-hint">Examples: broccoli, spinach, kale, collard greens, romaine lettuce, chard, bok choy, arugula, mustard greens.</div>
+      <div class="freq-row"><label>Per day</label><input type="number" id="q4d" min="0" placeholder="0" oninput="clearNever(4)"></div>
+      <div class="freq-row"><label>Per week</label><input type="number" id="q4w" min="0" placeholder="0" oninput="clearNever(4)"></div>
+      <div class="freq-row"><label>Per month</label><input type="number" id="q4m" min="0" placeholder="0" oninput="clearNever(4)"></div>
+      <label class="never-check" id="never4" onclick="toggleNever(4)">
+        <input type="checkbox" id="never4cb"> I never eat dark green vegetables
+      </label>
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="prevQ(4)">← Back</button>
+        <button class="btn btn-primary" onclick="nextQ(4)">Next →</button>
+      </div>
+    </div>
+
+    <!-- Q5: Orange Veg -->
+    <div class="question-card" id="q5">
+      <span class="q-badge veg-badge">Vegetable</span>
+      <span class="q-icon">🥕</span>
+      <div class="q-text">How often did you eat orange-colored vegetables?</div>
+      <div class="q-hint">Examples: carrots, sweet potatoes, pumpkin, winter squash (butternut, acorn, spaghetti squash).</div>
+      <div class="freq-row"><label>Per day</label><input type="number" id="q5d" min="0" placeholder="0" oninput="clearNever(5)"></div>
+      <div class="freq-row"><label>Per week</label><input type="number" id="q5w" min="0" placeholder="0" oninput="clearNever(5)"></div>
+      <div class="freq-row"><label>Per month</label><input type="number" id="q5m" min="0" placeholder="0" oninput="clearNever(5)"></div>
+      <label class="never-check" id="never5" onclick="toggleNever(5)">
+        <input type="checkbox" id="never5cb"> I never eat orange-colored vegetables
+      </label>
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="prevQ(5)">← Back</button>
+        <button class="btn btn-primary" onclick="nextQ(5)">Next →</button>
+      </div>
+    </div>
+
+    <!-- Q6: Other Veg -->
+    <div class="question-card" id="q6">
+      <span class="q-badge veg-badge">Vegetable</span>
+      <span class="q-icon">🥗</span>
+      <div class="q-text">How often did you eat other vegetables?</div>
+      <div class="q-hint">Not counting what you already told us about. Examples: tomatoes, corn, peas, lettuce, cabbage, peppers, baked or mashed potatoes, eggplant, cucumbers, onions. Do <em>not</em> include fried potatoes.</div>
+      <div class="freq-row"><label>Per day</label><input type="number" id="q6d" min="0" placeholder="0" oninput="clearNever(6)"></div>
+      <div class="freq-row"><label>Per week</label><input type="number" id="q6w" min="0" placeholder="0" oninput="clearNever(6)"></div>
+      <div class="freq-row"><label>Per month</label><input type="number" id="q6m" min="0" placeholder="0" oninput="clearNever(6)"></div>
+      <label class="never-check" id="never6" onclick="toggleNever(6)">
+        <input type="checkbox" id="never6cb"> I never eat other vegetables
+      </label>
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="prevQ(6)">← Back</button>
+        <button class="btn btn-primary" onclick="calculateScore()">See My Score →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results">
+
+    <div class="results-hero">
+      <div class="score-label">Total Fruit + Vegetable Intake</div>
+      <div class="big-score" id="totalScore">—</div>
+      <div class="score-label">times per day</div>
+      <div class="score-subtitle" id="scoreSubtitle"></div>
+    </div>
+
+    <div class="score-split">
+      <div class="score-box fruit-box">
+        <div class="icon">🍎</div>
+        <div class="num" id="fruitScore">—</div>
+        <div class="lbl">Fruit / day</div>
+      </div>
+      <div class="score-box veg-box">
+        <div class="icon">🥦</div>
+        <div class="num" id="vegScore">—</div>
+        <div class="lbl">Vegetable / day</div>
+      </div>
+    </div>
+
+    <div class="breakdown-card">
+      <h3>Breakdown by category</h3>
+      <div id="breakdownBars"></div>
+    </div>
+
+    <div class="guidance-card" id="guidanceCard">
+      <h4 id="guidanceTitle"></h4>
+      <p id="guidanceText"></p>
+    </div>
+
+    <!-- ORG SECTION -->
+    <div class="org-section">
+      <h3>📋 For Program Staff</h3>
+      <div class="data-row"><span>Participant ID</span><span class="val" id="orgID">—</span></div>
+      <div class="data-row"><span>Name</span><span class="val" id="orgName">—</span></div>
+      <div class="data-row"><span>Total F+V (times/day)</span><span class="val" id="orgTotal">—</span></div>
+      <div class="data-row"><span>Fruit (times/day)</span><span class="val" id="orgFruit">—</span></div>
+      <div class="data-row"><span>Vegetables (times/day)</span><span class="val" id="orgVeg">—</span></div>
+      <div class="data-row"><span>Fruit &lt; once/day?</span><span class="val" id="orgFruitFlag">—</span></div>
+      <div class="data-row"><span>Vegetables &lt; once/day?</span><span class="val" id="orgVegFlag">—</span></div>
+      <div class="data-row"><span>Date completed</span><span class="val" id="orgDate">—</span></div>
+      <button class="copy-btn" onclick="copyData()">📋 Copy Results to Clipboard</button>
+    </div>
+
+    <button class="restart-btn" onclick="restartSurvey()">↩ Take Survey Again</button>
+    <footer>
+      Based on the CDC BRFSS 2011 Fruit &amp; Vegetable Module.<br>
+      Scoring converts day/week/month responses to times per day.<br>
+      For research use: consult the full BRFSS scoring documentation.
+    </footer>
+  </div>
+
+</div>
+
+<div class="toast" id="toast">Copied to clipboard!</div>
+
+<script>
+  let currentQ = 0;
+  const totalQ = 6;
+
+  const neverState = {};
+
+  function updateProgress(q) {
+    const pct = Math.round((q / totalQ) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    if (q > 0) document.getElementById('stepIndicator').textContent = `Question ${q} of ${totalQ}`;
+  }
+
+  function startSurvey() {
+    const pid = document.getElementById('participantID').value.trim();
+    if (!pid) {
+      document.getElementById('idError').style.display = 'block';
+      document.getElementById('participantID').style.borderColor = 'var(--orange)';
+      return;
+    }
+    document.getElementById('idError').style.display = 'none';
+    document.getElementById('introSection').style.display = 'none';
+    document.getElementById('surveySection').style.display = 'block';
+    currentQ = 1;
+    showQ(1);
+    updateProgress(0);
+  }
+
+  function showQ(n) {
+    for (let i = 1; i <= totalQ; i++) {
+      document.getElementById('q'+i).classList.remove('active');
+    }
+    document.getElementById('q'+n).classList.add('active');
+    document.getElementById('stepIndicator').textContent = `Question ${n} of ${totalQ}`;
+    updateProgress(n - 1);
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }
+
+  function nextQ(n) {
+    if (n < totalQ) { currentQ = n + 1; showQ(n + 1); }
+  }
+
+  function prevQ(n) {
+    if (n > 1) { currentQ = n - 1; showQ(n - 1); }
+  }
+
+  function toggleNever(n) {
+    const cb = document.getElementById('never'+n+'cb');
+    const label = document.getElementById('never'+n);
+    cb.checked = !cb.checked;
+    neverState[n] = cb.checked;
+    label.classList.toggle('checked', cb.checked);
+    if (cb.checked) {
+      ['d','w','m'].forEach(u => {
+        const el = document.getElementById('q'+n+u);
+        el.value = '';
+        el.disabled = true;
+      });
+    } else {
+      ['d','w','m'].forEach(u => {
+        document.getElementById('q'+n+u).disabled = false;
+      });
+    }
+  }
+
+  function clearNever(n) {
+    neverState[n] = false;
+    document.getElementById('never'+n+'cb').checked = false;
+    document.getElementById('never'+n).classList.remove('checked');
+  }
+
+  // Core BRFSS scoring: convert day/week/month to times per day
+  function toPerDay(d, w, m, never) {
+    if (never) return 0;
+    let val = 0;
+    const dv = parseFloat(d) || 0;
+    const wv = parseFloat(w) || 0;
+    const mv = parseFloat(m) || 0;
+    val = dv + (wv / 7) + (mv / 30);
+    return val;
+  }
+
+  function getQValue(n) {
+    const never = neverState[n] || document.getElementById('never'+n+'cb').checked;
+    return toPerDay(
+      document.getElementById('q'+n+'d').value,
+      document.getElementById('q'+n+'w').value,
+      document.getElementById('q'+n+'m').value,
+      never
+    );
+  }
+
+  function fmt(v) { return v.toFixed(1); }
+
+  function calculateScore() {
+    updateProgress(6);
+
+    const juice   = getQValue(1);
+    const fruit   = getQValue(2);
+    const beans   = getQValue(3);
+    const green   = getQValue(4);
+    const orange  = getQValue(5);
+    const other   = getQValue(6);
+
+    const fruitTotal = juice + fruit;
+    const vegTotal   = beans + green + orange + other;
+    const grandTotal = fruitTotal + vegTotal;
+
+    // Show results
+    document.getElementById('surveySection').style.display = 'none';
+    document.getElementById('results').style.display = 'block';
+
+    document.getElementById('totalScore').textContent = fmt(grandTotal);
+    document.getElementById('fruitScore').textContent = fmt(fruitTotal);
+    document.getElementById('vegScore').textContent   = fmt(vegTotal);
+
+    // Subtitle
+    const nat_fruit_med = 1.1, nat_veg_med = 1.6;
+    let subtitle = '';
+    if (fruitTotal >= nat_fruit_med && vegTotal >= nat_veg_med) {
+      subtitle = 'Above national median for both fruit & vegetables 🎉';
+    } else if (fruitTotal < nat_fruit_med && vegTotal < nat_veg_med) {
+      subtitle = 'Below national median for both fruit & vegetables';
+    } else if (fruitTotal < nat_fruit_med) {
+      subtitle = 'Below national median for fruit';
+    } else {
+      subtitle = 'Below national median for vegetables';
+    }
+    document.getElementById('scoreSubtitle').textContent = subtitle;
+
+    // Breakdown bars
+    const items = [
+      { label: '🍊 Fruit juice', val: juice,  cls: 'fruit' },
+      { label: '🍎 Fruit',       val: fruit,  cls: 'fruit' },
+      { label: '🫘 Beans/legumes', val: beans, cls: 'veg' },
+      { label: '🥦 Dark green veg', val: green, cls: 'veg' },
+      { label: '🥕 Orange veg',  val: orange, cls: 'veg' },
+      { label: '🥗 Other veg',   val: other,  cls: 'veg' },
+    ];
+    const maxVal = Math.max(...items.map(i => i.val), 1);
+    const barsHtml = items.map(item => {
+      const pct = Math.min(100, Math.round((item.val / maxVal) * 100));
+      return `<div class="bar-item">
+        <div class="bar-top"><span>${item.label}</span><span>${fmt(item.val)}/day</span></div>
+        <div class="bar-track"><div class="bar-fill ${item.cls}" style="width:${pct}%"></div></div>
+      </div>`;
+    }).join('');
+    document.getElementById('breakdownBars').innerHTML = barsHtml;
+
+    // Guidance
+    const gc = document.getElementById('guidanceCard');
+    const gt = document.getElementById('guidanceTitle');
+    const gp = document.getElementById('guidanceText');
+    if (grandTotal < 2) {
+      gc.className = 'guidance-card low';
+      gt.textContent = 'Room to grow 🌱';
+      gp.textContent = 'Most Americans eat fewer fruits and vegetables than recommended — you\'re not alone. Even small changes like adding a piece of fruit at breakfast or a vegetable at dinner can make a real difference over time.';
+    } else if (grandTotal < 4) {
+      gc.className = 'guidance-card mid';
+      gt.textContent = 'Good foundation 👍';
+      gp.textContent = 'You\'re eating fruits and vegetables most days. Aiming for a little more variety — especially colorful vegetables — could help you reach recommended amounts.';
+    } else {
+      gc.className = 'guidance-card high';
+      gt.textContent = 'Great intake! 🌟';
+      gp.textContent = 'You\'re doing well with fruits and vegetables. Keep up the variety — different colors mean different nutrients and health benefits.';
+    }
+
+    // Org panel
+    const today = new Date().toLocaleDateString('en-US', {year:'numeric', month:'short', day:'numeric'});
+    const pid = document.getElementById('participantID').value.trim();
+    const pname = document.getElementById('participantName').value.trim();
+    document.getElementById('orgID').textContent   = pid;
+    document.getElementById('orgName').textContent = pname || '(not provided)';
+    document.getElementById('orgTotal').textContent  = fmt(grandTotal);
+    document.getElementById('orgFruit').textContent  = fmt(fruitTotal);
+    document.getElementById('orgVeg').textContent    = fmt(vegTotal);
+    document.getElementById('orgFruitFlag').textContent = fruitTotal < 1 ? 'Yes ⚠️' : 'No';
+    document.getElementById('orgVegFlag').textContent   = vegTotal   < 1 ? 'Yes ⚠️' : 'No';
+    document.getElementById('orgDate').textContent   = today;
+
+    // Store for copy
+    window._surveyData = {
+      pid: pid, pname: pname || '(not provided)',
+      total: fmt(grandTotal), fruit: fmt(fruitTotal), veg: fmt(vegTotal),
+      fruitFlag: fruitTotal < 1 ? 'Yes' : 'No',
+      vegFlag:   vegTotal   < 1 ? 'Yes' : 'No',
+      breakdown: { juice: fmt(juice), fruit: fmt(fruit), beans: fmt(beans), green: fmt(green), orange: fmt(orange), other: fmt(other) },
+      date: today
+    };
+
+    document.getElementById('progressFill').style.width = '100%';
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }
+
+  function copyData() {
+    const d = window._surveyData;
+    if (!d) return;
+    const text = [
+      `BRFSS Fruit & Vegetable Survey Results`,
+      `Participant ID: ${d.pid}`,
+      `Name: ${d.pname}`,
+      `Date: ${d.date}`,
+      ``,
+      `SUMMARY`,
+      `Total F+V (times/day): ${d.total}`,
+      `Fruit (times/day): ${d.fruit}`,
+      `Vegetables (times/day): ${d.veg}`,
+      `Fruit < once/day: ${d.fruitFlag}`,
+      `Vegetables < once/day: ${d.vegFlag}`,
+      ``,
+      `BREAKDOWN`,
+      `Fruit juice: ${d.breakdown.juice}/day`,
+      `Fruit: ${d.breakdown.fruit}/day`,
+      `Beans/legumes: ${d.breakdown.beans}/day`,
+      `Dark green veg: ${d.breakdown.green}/day`,
+      `Orange-colored veg: ${d.breakdown.orange}/day`,
+      `Other vegetables: ${d.breakdown.other}/day`,
+      ``,
+      `National medians (BRFSS 2011): Fruit 1.1/day | Vegetables 1.6/day`
+    ].join('\n');
+
+    navigator.clipboard.writeText(text).then(() => {
+      const t = document.getElementById('toast');
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2200);
+    });
+  }
+
+  function restartSurvey() {
+    document.getElementById('participantID').value = '';
+    document.getElementById('participantName').value = '';
+    // Reset all inputs
+    for (let i = 1; i <= 6; i++) {
+      ['d','w','m'].forEach(u => {
+        const el = document.getElementById('q'+i+u);
+        el.value = '';
+        el.disabled = false;
+      });
+      neverState[i] = false;
+      document.getElementById('never'+i+'cb').checked = false;
+      document.getElementById('never'+i).classList.remove('checked');
+    }
+    document.getElementById('results').style.display = 'none';
+    document.getElementById('surveySection').style.display = 'none';
+    document.getElementById('introSection').style.display = 'block';
+    document.getElementById('progressFill').style.width = '0%';
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+</script>
+</body>
+</html>
