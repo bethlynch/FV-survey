@@ -506,6 +506,11 @@
       <div class="score-subtitle" id="scoreSubtitle"></div>
     </div>
 
+    <div class="guidance-card" id="totalGuidance" style="margin: 14px 0 0;">
+      <h4 id="totalGuidanceTitle"></h4>
+      <p id="totalGuidanceText"></p>
+    </div>
+
     <div class="disclaimer-note">
       📊 This score measures how <em>often</em> you ate fruits and vegetables, not the amount. Both matter for good health. Use this as a starting point for reflection, not a precise nutritional assessment.
     </div>
@@ -722,6 +727,32 @@
     if (vegTotal < 1) subtitles.push('vegetables below once/day');
     document.getElementById('scoreSubtitle').textContent =
       subtitles.length ? '⚠️ ' + subtitles.join(' · ') : '✓ Eating fruits & vegetables daily';
+
+    // ── Feedback: Total F+V ──
+    const totalCard  = document.getElementById('totalGuidance');
+    const totalTitle = document.getElementById('totalGuidanceTitle');
+    const totalText  = document.getElementById('totalGuidanceText');
+    if (fvTotal < 1) {
+      totalCard.className = 'guidance-card low';
+      totalTitle.textContent = 'Overall: Getting started 🌱';
+      totalText.textContent  = "You're eating fruits and vegetables less than once a day on average. Most people eat fewer than recommended — you're not alone. Even one small addition each day, like a piece of fruit at breakfast or a vegetable at dinner, is a meaningful step forward.";
+    } else if (fvTotal < 2) {
+      totalCard.className = 'guidance-card low';
+      totalTitle.textContent = 'Overall: Room to grow 🌱';
+      totalText.textContent  = "You're eating fruits and vegetables once or twice a day. That's a start, but there's real room to add more. Try to include a fruit or vegetable at every meal — variety and frequency both matter for your health.";
+    } else if (fvTotal < 3) {
+      totalCard.className = 'guidance-card mid';
+      totalTitle.textContent = 'Overall: Building a habit 👍';
+      totalText.textContent  = "You're eating fruits and vegetables a couple of times a day. You have a foundation to build on — aiming to add one more eating occasion per day could make a real difference over time.";
+    } else if (fvTotal < 5) {
+      totalCard.className = 'guidance-card mid';
+      totalTitle.textContent = 'Overall: Good frequency 👍';
+      totalText.textContent  = "You're eating fruits and vegetables multiple times a day — that reflects a solid daily habit. Keep focusing on variety across the different types to get the full range of nutrients.";
+    } else {
+      totalCard.className = 'guidance-card high';
+      totalTitle.textContent = 'Overall: Strong pattern 🌟';
+      totalText.textContent  = "You're eating fruits and vegetables frequently throughout the day — that's a strong pattern consistent with what health experts recommend. Keep it up and keep mixing in different colors and types.";
+    }
 
 
     // ── Feedback: Fruit ──
