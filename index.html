@@ -468,12 +468,12 @@
       <span class="q-badge fruit-badge">Fruit</span>
       <span class="q-icon">🍊</span>
       <div class="q-text">How often did you drink 100% pure fruit juice?</div>
-      <div class="q-hint">Examples: orange juice, apple juice, grape juice. Do <em>not</em> include fruit drinks with added sugar (like Hi-C, lemonade, or Kool-Aid).</div>
+      <div class="q-hint">Examples: orange juice, apple juice, grape juice. <strong>Think about the past 30 days.</strong> Do <em>not</em> include fruit drinks with added sugar (like Hi-C, lemonade, or Kool-Aid).</div>
       <div class="freq-row"><label>Per day</label><input type="number" id="q1d" min="0" placeholder="0" oninput="clearNever(1)"></div>
       <div class="freq-row"><label>Per week</label><input type="number" id="q1w" min="0" placeholder="0" oninput="clearNever(1)"></div>
       <div class="freq-row"><label>Per month</label><input type="number" id="q1m" min="0" placeholder="0" oninput="clearNever(1)"></div>
-      <label class="never-check" id="never1" onclick="toggleNever(1)">
-        <input type="checkbox" id="never1cb"> I never drink fruit juice
+      <label class="never-check" id="never1" for="never1cb">
+        <input type="checkbox" id="never1cb" onchange="toggleNever(1)"> I never drink fruit juice
       </label>
       <div class="btn-row"><button class="btn btn-primary" onclick="nextQ(1)">Next →</button></div>
     </div>
@@ -483,12 +483,12 @@
       <span class="q-badge fruit-badge">Fruit</span>
       <span class="q-icon">🍎</span>
       <div class="q-text">How often did you eat fruit? (Not counting juice)</div>
-      <div class="q-hint">Include fresh, frozen, or canned fruit. Examples: apples, bananas, oranges, berries, watermelon, grapes, mango.</div>
+      <div class="q-hint"><strong>Think about the past 30 days.</strong> Include fresh, frozen, or canned fruit. Examples: apples, bananas, oranges, berries, watermelon, grapes, mango.</div>
       <div class="freq-row"><label>Per day</label><input type="number" id="q2d" min="0" placeholder="0" oninput="clearNever(2)"></div>
       <div class="freq-row"><label>Per week</label><input type="number" id="q2w" min="0" placeholder="0" oninput="clearNever(2)"></div>
       <div class="freq-row"><label>Per month</label><input type="number" id="q2m" min="0" placeholder="0" oninput="clearNever(2)"></div>
-      <label class="never-check" id="never2" onclick="toggleNever(2)">
-        <input type="checkbox" id="never2cb"> I never eat fruit
+      <label class="never-check" id="never2" for="never2cb">
+        <input type="checkbox" id="never2cb" onchange="toggleNever(2)"> I never eat fruit
       </label>
       <div class="btn-row">
         <button class="btn btn-secondary" onclick="prevQ(2)">← Back</button>
@@ -501,12 +501,12 @@
       <span class="q-badge veg-badge">Vegetable</span>
       <span class="q-icon">🫘</span>
       <div class="q-text">How often did you eat cooked or canned beans?</div>
-      <div class="q-hint">Include refried beans, black beans, kidney beans, lentils, chickpeas, edamame, tofu, bean soup, hummus. Do <em>not</em> include green beans.</div>
+      <div class="q-hint"><strong>Think about the past 30 days.</strong> Include refried beans, black beans, kidney beans, lentils, chickpeas, edamame, tofu, bean soup, hummus. Do <em>not</em> include green beans.</div>
       <div class="freq-row"><label>Per day</label><input type="number" id="q3d" min="0" placeholder="0" oninput="clearNever(3)"></div>
       <div class="freq-row"><label>Per week</label><input type="number" id="q3w" min="0" placeholder="0" oninput="clearNever(3)"></div>
       <div class="freq-row"><label>Per month</label><input type="number" id="q3m" min="0" placeholder="0" oninput="clearNever(3)"></div>
-      <label class="never-check" id="never3" onclick="toggleNever(3)">
-        <input type="checkbox" id="never3cb"> I never eat beans
+      <label class="never-check" id="never3" for="never3cb">
+        <input type="checkbox" id="never3cb" onchange="toggleNever(3)"> I never eat beans
       </label>
       <div class="btn-row">
         <button class="btn btn-secondary" onclick="prevQ(3)">← Back</button>
@@ -519,12 +519,12 @@
       <span class="q-badge veg-badge">Vegetable</span>
       <span class="q-icon">🥦</span>
       <div class="q-text">How often did you eat dark green vegetables?</div>
-      <div class="q-hint">Examples: broccoli, spinach, kale, collard greens, romaine lettuce, chard, bok choy, arugula, mustard greens.</div>
+      <div class="q-hint"><strong>Think about the past 30 days.</strong> Examples: broccoli, spinach, kale, collard greens, romaine lettuce, chard, bok choy, arugula, mustard greens.</div>
       <div class="freq-row"><label>Per day</label><input type="number" id="q4d" min="0" placeholder="0" oninput="clearNever(4)"></div>
       <div class="freq-row"><label>Per week</label><input type="number" id="q4w" min="0" placeholder="0" oninput="clearNever(4)"></div>
       <div class="freq-row"><label>Per month</label><input type="number" id="q4m" min="0" placeholder="0" oninput="clearNever(4)"></div>
-      <label class="never-check" id="never4" onclick="toggleNever(4)">
-        <input type="checkbox" id="never4cb"> I never eat dark green vegetables
+      <label class="never-check" id="never4" for="never4cb">
+        <input type="checkbox" id="never4cb" onchange="toggleNever(4)"> I never eat dark green vegetables
       </label>
       <div class="btn-row">
         <button class="btn btn-secondary" onclick="prevQ(4)">← Back</button>
@@ -537,12 +537,12 @@
       <span class="q-badge veg-badge">Vegetable</span>
       <span class="q-icon">🥕</span>
       <div class="q-text">How often did you eat orange-colored vegetables?</div>
-      <div class="q-hint">Examples: carrots, sweet potatoes, pumpkin, winter squash (butternut, acorn, spaghetti squash).</div>
+      <div class="q-hint"><strong>Think about the past 30 days.</strong> Examples: carrots, sweet potatoes, pumpkin, winter squash (butternut, acorn, spaghetti squash).</div>
       <div class="freq-row"><label>Per day</label><input type="number" id="q5d" min="0" placeholder="0" oninput="clearNever(5)"></div>
       <div class="freq-row"><label>Per week</label><input type="number" id="q5w" min="0" placeholder="0" oninput="clearNever(5)"></div>
       <div class="freq-row"><label>Per month</label><input type="number" id="q5m" min="0" placeholder="0" oninput="clearNever(5)"></div>
-      <label class="never-check" id="never5" onclick="toggleNever(5)">
-        <input type="checkbox" id="never5cb"> I never eat orange-colored vegetables
+      <label class="never-check" id="never5" for="never5cb">
+        <input type="checkbox" id="never5cb" onchange="toggleNever(5)"> I never eat orange-colored vegetables
       </label>
       <div class="btn-row">
         <button class="btn btn-secondary" onclick="prevQ(5)">← Back</button>
@@ -555,12 +555,12 @@
       <span class="q-badge veg-badge">Vegetable</span>
       <span class="q-icon">🥗</span>
       <div class="q-text">How often did you eat other vegetables?</div>
-      <div class="q-hint">Not counting what you already told us about. Examples: tomatoes, corn, peas, lettuce, cabbage, peppers, baked or mashed potatoes, eggplant, cucumbers, onions. Do <em>not</em> include fried potatoes.</div>
+      <div class="q-hint"><strong>Think about the past 30 days.</strong> Not counting what you already told us about. Examples: tomatoes, corn, peas, lettuce, cabbage, peppers, baked or mashed potatoes, eggplant, cucumbers, onions. Do <em>not</em> include fried potatoes.</div>
       <div class="freq-row"><label>Per day</label><input type="number" id="q6d" min="0" placeholder="0" oninput="clearNever(6)"></div>
       <div class="freq-row"><label>Per week</label><input type="number" id="q6w" min="0" placeholder="0" oninput="clearNever(6)"></div>
       <div class="freq-row"><label>Per month</label><input type="number" id="q6m" min="0" placeholder="0" oninput="clearNever(6)"></div>
-      <label class="never-check" id="never6" onclick="toggleNever(6)">
-        <input type="checkbox" id="never6cb"> I never eat other vegetables
+      <label class="never-check" id="never6" for="never6cb">
+        <input type="checkbox" id="never6cb" onchange="toggleNever(6)"> I never eat other vegetables
       </label>
       <div class="btn-row">
         <button class="btn btn-secondary" onclick="prevQ(6)">← Back</button>
@@ -676,7 +676,6 @@
   function toggleNever(n) {
     const cb = document.getElementById('never'+n+'cb');
     const label = document.getElementById('never'+n);
-    cb.checked = !cb.checked;
     neverState[n] = cb.checked;
     label.classList.toggle('checked', cb.checked);
     if (cb.checked) {
