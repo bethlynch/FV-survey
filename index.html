@@ -317,24 +317,6 @@
   .guidance-card.high { background: var(--green-pale); border-left: 4px solid var(--green); }
   .guidance-card h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 6px; }
 
-  .org-section {
-    background: #1b2f1e;
-    color: white;
-    border-radius: var(--radius);
-    padding: 22px 20px;
-    margin: 20px 0;
-    font-size: 0.85rem;
-  }
-  .org-section h3 { font-family: 'Fraunces', serif; font-size: 1rem; margin-bottom: 12px; opacity: 0.9; }
-  .org-section .data-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 7px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-    font-size: 0.82rem;
-  }
-  .org-section .data-row .val { font-weight: 600; color: var(--green-light); }
-  .org-section .data-row .val.flag { color: #ff9800; }
 
 
   .restart-btn {
@@ -553,20 +535,7 @@
       <p id="guidanceText"></p>
     </div>
 
-    <div class="org-section">
-      <h3>📋 For Program Staff</h3>
-      <div class="data-row"><span>Participant ID</span><span class="val" id="orgID">—</span></div>
-      <div class="data-row"><span>Name</span><span class="val" id="orgName">—</span></div>
-      <div class="data-row"><span>Date completed</span><span class="val" id="orgDate">—</span></div>
-      <div class="data-row"><span>Total F+V (times/day)</span><span class="val" id="orgTotal">—</span></div>
-      <div class="data-row"><span>Fruit (times/day)</span><span class="val" id="orgFruit">—</span></div>
-      <div class="data-row"><span>Vegetables (times/day)</span><span class="val" id="orgVeg">—</span></div>
-      <div class="data-row"><span>Soda (times/day)</span><span class="val" id="orgSoda">—</span></div>
-      <div class="data-row"><span>Breakfast (days/week)</span><span class="val" id="orgBreakfast">—</span></div>
-      <div class="data-row"><span>Fruit &lt; once/day?</span><span class="val" id="orgFruitFlag">—</span></div>
-      <div class="data-row"><span>Vegetables &lt; once/day?</span><span class="val" id="orgVegFlag">—</span></div>
-      <div class="data-row"><span>Raw responses (Q1–Q7)</span><span class="val" id="orgRaw">—</span></div>
-    </div>
+                      </div>
 
     <button class="restart-btn" onclick="restartSurvey()">↩ Take Survey Again</button>
 
@@ -783,22 +752,8 @@
     const today = new Date().toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' });
     const rawLetters = [1,2,3,4,5,6,7].map(i => answers[i] ? answers[i].letter : '?').join(', ');
 
-    document.getElementById('orgID').textContent        = pid;
-    document.getElementById('orgName').textContent      = pname || '(not provided)';
     document.getElementById('orgDate').textContent      = today;
-    document.getElementById('orgTotal').textContent     = fmt(fvTotal);
-    document.getElementById('orgFruit').textContent     = fmt(fruit);
-    document.getElementById('orgVeg').textContent       = fmt(vegTotal);
-    document.getElementById('orgSoda').textContent      = fmt(soda);
-    document.getElementById('orgBreakfast').textContent = breakf + ' days';
-    document.getElementById('orgRaw').textContent       = rawLetters;
 
-    const fruitFlagEl = document.getElementById('orgFruitFlag');
-    const vegFlagEl   = document.getElementById('orgVegFlag');
-    fruitFlagEl.textContent = fruit < 1 ? 'Yes ⚠️' : 'No';
-    fruitFlagEl.className   = 'val' + (fruit < 1 ? ' flag' : '');
-    vegFlagEl.textContent   = vegTotal < 1 ? 'Yes ⚠️' : 'No';
-    vegFlagEl.className     = 'val' + (vegTotal < 1 ? ' flag' : '');
 
     const surveyPayload = {
       pid, pname: pname || '(not provided)', date: today,
