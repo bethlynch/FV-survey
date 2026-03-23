@@ -396,7 +396,7 @@
     <div class="btn-row">
       <button class="btn btn-primary" onclick="startSurvey()">Start Survey →</button>
     </div>
-    <p class="step-indicator">7 questions · ~2 minutes</p>
+    <p class="step-indicator">8 questions · ~2 minutes</p>
   </div>
 
   <!-- SURVEY -->
@@ -489,7 +489,20 @@
       <div class="options" id="opts7"></div>
       <div class="btn-row">
         <button class="btn btn-secondary" onclick="prevQ(7)">← Back</button>
-        <button class="btn btn-primary" id="next7" onclick="calculateScore()" disabled>See My Score →</button>
+        <button class="btn btn-primary" id="next7" onclick="nextQ(7)" disabled>Next →</button>
+      </div>
+    </div>
+
+    <!-- Q8: Physical Activity -->
+    <div class="question-card" id="q8">
+      <span class="q-badge" style="background:#e8eaf6; color:#3949ab;">Physical Activity</span>
+      <span class="q-icon">🏃</span>
+      <div class="q-text">During the past 7 days, on how many days were you physically active for at least 30 minutes?</div>
+      <div class="q-hint">Include any activity that increased your heart rate or made you breathe harder — like brisk walking, dancing, sports, yard work, or exercise classes. You can count all activity throughout the day added together.</div>
+      <div class="options" id="opts8"></div>
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="prevQ(8)">← Back</button>
+        <button class="btn btn-primary" id="next8" onclick="calculateScore()" disabled>See My Score →</button>
       </div>
     </div>
 
@@ -563,11 +576,23 @@
       </div>
     </div>
 
+    <div class="paired-row">
+      <div class="score-box" style="flex-shrink:0; width:100px; background:white; border-radius:var(--radius); padding:16px 12px; text-align:center; box-shadow:var(--shadow);">
+        <div class="icon">🏃</div>
+        <div class="num" id="paScore" style="font-family:'Fraunces',serif; font-size:1.8rem; font-weight:700; line-height:1; color:#3949ab;">—</div>
+        <div class="lbl" style="font-size:0.68rem; color:var(--mid); margin-top:4px; text-transform:uppercase; letter-spacing:0.04em; line-height:1.3;">Active days / week</div>
+      </div>
+      <div class="guidance-card inline" id="paGuidance">
+        <h4 id="paGuidanceTitle"></h4>
+        <p id="paGuidanceText"></p>
+      </div>
+    </div>
+
                       </div>
 
 
     <footer>
-      Based on the CDC Youth Risk Behavior Surveillance System (YRBSS) dietary questions.<br>
+      Based on the CDC Youth Risk Behavior Surveillance System (YRBSS) dietary questions and the Single Item Physical Activity Measure (SIPAM).<br>
       Scoring converts 7-day frequency categories to estimated times per day.<br>
       For research use: consult full YRBSS documentation.
     </footer>
@@ -609,15 +634,26 @@
     { letter: 'H', text: '7 days', score: 7 },
   ];
 
+  const PA_OPTIONS = [
+    { letter: 'A', text: '0 days', score: 0 },
+    { letter: 'B', text: '1 day',  score: 1 },
+    { letter: 'C', text: '2 days', score: 2 },
+    { letter: 'D', text: '3 days', score: 3 },
+    { letter: 'E', text: '4 days', score: 4 },
+    { letter: 'F', text: '5 days', score: 5 },
+    { letter: 'G', text: '6 days', score: 6 },
+    { letter: 'H', text: '7 days', score: 7 },
+  ];
+
   const QUESTION_OPTIONS = [
     FV_OPTIONS, FV_OPTIONS, FV_OPTIONS, FV_OPTIONS, FV_OPTIONS,
-    SODA_OPTIONS, BREAKFAST_OPTIONS
+    SODA_OPTIONS, BREAKFAST_OPTIONS, PA_OPTIONS
   ];
 
   // ── State ────────────────────────────────────────────────────────────
   const answers = {}; // { 1: {letter, score}, ... }
   let currentQ = 0;
-  const totalQ = 7;
+  const totalQ = 8;
 
   // ── Build option buttons ─────────────────────────────────────────────
   function buildOptions() {
@@ -707,6 +743,7 @@
     const otherV  = answers[5].score;
     const soda    = answers[6].score;
     const breakf  = answers[7].score;
+    const pa      = answers[8].score;
 
     const vegTotal   = salad + potato + carrot + otherV;
     const fvTotal    = fruit + vegTotal;
@@ -835,11 +872,38 @@
       breakText.textContent  = "You're eating breakfast every day — consistent breakfast eating is associated with better overall diet quality and more stable energy throughout the day. Keep it up!";
     }
 
+    // ── Feedback: Physical Activity ──
+    document.getElementById('paScore').textContent = pa;
+    const paCard  = document.getElementById('paGuidance');
+    const paTitle = document.getElementById('paGuidanceTitle');
+    const paText  = document.getElementById('paGuidanceText');
+    if (pa === 0) {
+      paCard.className = 'guidance-card low';
+      paTitle.textContent = 'Physical Activity: No active days this week 🌱';
+      paText.textContent  = "You reported no days of physical activity this past week. It can be hard to get started — even a short 10-minute walk on most days is a meaningful first step and adds up over time.";
+    } else if (pa <= 2) {
+      paCard.className = 'guidance-card low';
+      paTitle.textContent = 'Physical Activity: A couple of days this week 🌱';
+      paText.textContent  = "You're being active 1–2 days a week — that's a start. Health experts recommend aiming for at least 5 days of moderate activity per week. Adding one more active day each week is a manageable way to build toward that goal.";
+    } else if (pa <= 4) {
+      paCard.className = 'guidance-card mid';
+      paTitle.textContent = 'Physical Activity: Some days this week 👍';
+      paText.textContent  = "You're being active a few days a week — you have a real foundation to build on. Aiming for 5 or more days of at least 30 minutes of moderate activity is the general health recommendation. You're partway there!";
+    } else if (pa <= 6) {
+      paCard.className = 'guidance-card mid';
+      paTitle.textContent = 'Physical Activity: Most days this week 👍';
+      paText.textContent  = "You're active most days of the week — that's a strong habit. Staying consistent is one of the most important things you can do for your long-term health.";
+    } else {
+      paCard.className = 'guidance-card high';
+      paTitle.textContent = 'Physical Activity: Every day this week 🌟';
+      paText.textContent  = "You're physically active every day — excellent! Daily movement is one of the best things you can do for your physical and mental health. Keep it up and keep enjoying it.";
+    }
+
     // Org panel
     const pid   = document.getElementById('participantID').value.trim();
     const pname = document.getElementById('participantName').value.trim();
     const today = new Date().toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' });
-    const rawLetters = [1,2,3,4,5,6,7].map(i => answers[i] ? answers[i].letter : '?').join(', ');
+    const rawLetters = [1,2,3,4,5,6,7,8].map(i => answers[i] ? answers[i].letter : '?').join(', ');
 
     const surveyPayload = {
       pid, pname: pname || '(not provided)', date: today,
@@ -849,7 +913,8 @@
       vegFlag:   vegTotal < 1 ? 'Yes' : 'No',
       q1: answers[1].letter, q2: answers[2].letter, q3: answers[3].letter,
       q4: answers[4].letter, q5: answers[5].letter, q6: answers[6].letter,
-      q7: answers[7].letter,
+      q7: answers[7].letter, q8: answers[8].letter,
+      pa: pa,
       raw: rawLetters
     };
     window._surveyData = surveyPayload;
