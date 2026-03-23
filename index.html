@@ -336,20 +336,6 @@
   .org-section .data-row .val { font-weight: 600; color: var(--green-light); }
   .org-section .data-row .val.flag { color: #ff9800; }
 
-  .copy-btn {
-    width: 100%;
-    margin-top: 14px;
-    background: rgba(255,255,255,0.1);
-    color: white;
-    border: 1.5px solid rgba(255,255,255,0.2);
-    padding: 11px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.88rem;
-    transition: all 0.2s;
-  }
-  .copy-btn:hover { background: rgba(255,255,255,0.18); }
 
   .restart-btn {
     width: 100%;
@@ -367,23 +353,6 @@
   }
   .restart-btn:hover { background: var(--green-pale); }
 
-  .toast {
-    position: fixed;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--dark);
-    color: white;
-    padding: 10px 22px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s;
-    z-index: 999;
-    white-space: nowrap;
-  }
-  .toast.show { opacity: 1; }
 
   .submit-status {
     margin: 16px 0 0;
@@ -597,7 +566,6 @@
       <div class="data-row"><span>Fruit &lt; once/day?</span><span class="val" id="orgFruitFlag">—</span></div>
       <div class="data-row"><span>Vegetables &lt; once/day?</span><span class="val" id="orgVegFlag">—</span></div>
       <div class="data-row"><span>Raw responses (Q1–Q7)</span><span class="val" id="orgRaw">—</span></div>
-      <button class="copy-btn" onclick="copyData()">📋 Copy Results to Clipboard</button>
     </div>
 
     <button class="restart-btn" onclick="restartSurvey()">↩ Take Survey Again</button>
@@ -611,7 +579,6 @@
 
 </div>
 
-<div class="toast" id="toast">Copied to clipboard!</div>
 
 <script>
   // ── Option definitions ──────────────────────────────────────────────
@@ -873,40 +840,6 @@
     .catch(() => {
       statusEl.className = 'submit-status error';
       statusEl.textContent = '⚠️ Could not save automatically. Please use the Copy button below and share with staff.';
-    });
-  }
-
-  // ── Copy to clipboard ────────────────────────────────────────────────
-  function copyData() {
-    const d = window._surveyData;
-    if (!d) return;
-    const text = [
-      'YRBSS Healthy Eating Survey Results',
-      `Participant ID: ${d.pid}`,
-      `Name: ${d.pname}`,
-      `Date: ${d.date}`,
-      '',
-      'SCORES (estimated times per day)',
-      `Total Fruit + Vegetables: ${d.total}`,
-      `  Fruit: ${d.fruit}`,
-      `  Vegetables: ${d.veg}`,
-      `Soda: ${d.soda}`,
-      `Breakfast: ${d.breakfast} days/week`,
-      '',
-      'FLAGS',
-      `Fruit < once/day: ${d.fruitFlag}`,
-      `Vegetables < once/day: ${d.vegFlag}`,
-      '',
-      `Raw responses (Q1–Q7): ${d.raw}`,
-      '',
-      'Scoring: A=0, B=0.29, C=0.71, D=1, E=2, F=3, G=4 times/day',
-      'Source: CDC Youth Risk Behavior Surveillance System (YRBSS)'
-    ].join('\n');
-
-    navigator.clipboard.writeText(text).then(() => {
-      const t = document.getElementById('toast');
-      t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 2200);
     });
   }
 </script>
