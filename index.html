@@ -211,7 +211,29 @@
     transition: all 0.15s;
   }
 
-  .btn-row { display: flex; gap: 10px; margin-top: 20px; }
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  /* Sticky bottom button on mobile */
+  @media (max-width: 600px) {
+    .btn-row {
+      position: sticky;
+      bottom: 0;
+      background: white;
+      padding: 12px 0 16px;
+      margin: 0 -20px -20px;
+      padding-left: 20px;
+      padding-right: 20px;
+      border-top: 1px solid var(--border);
+      z-index: 10;
+    }
+    .question-card {
+      padding-bottom: 0;
+    }
+  }
   .btn {
     flex: 1;
     padding: 13px 20px;
@@ -347,6 +369,17 @@
   .submit-status.sending  { background: #fff8e1; color: #f57f17; }
   .submit-status.success  { background: var(--green-pale); color: var(--green); }
   .submit-status.error    { background: #fff3e0; color: #e65100; }
+
+  .disclaimer-note {
+    background: #f0f4f8;
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    font-size: 0.82rem;
+    color: var(--mid);
+    line-height: 1.6;
+    margin: 16px 0;
+  }
+  .disclaimer-note em { font-style: italic; }
 
   footer {
     text-align: center;
@@ -530,9 +563,28 @@
       <div id="breakdownBars"></div>
     </div>
 
-    <div class="guidance-card" id="guidanceCard">
-      <h4 id="guidanceTitle"></h4>
-      <p id="guidanceText"></p>
+    <div class="disclaimer-note">
+      📊 This score measures how <em>often</em> you ate fruits and vegetables, not the amount. Both matter for good health. Use this as a starting point for reflection, not a precise nutritional assessment.
+    </div>
+
+    <div class="guidance-card" id="fruitGuidance">
+      <h4 id="fruitGuidanceTitle"></h4>
+      <p id="fruitGuidanceText"></p>
+    </div>
+
+    <div class="guidance-card" id="vegGuidance">
+      <h4 id="vegGuidanceTitle"></h4>
+      <p id="vegGuidanceText"></p>
+    </div>
+
+    <div class="guidance-card" id="sodaGuidance">
+      <h4 id="sodaGuidanceTitle"></h4>
+      <p id="sodaGuidanceText"></p>
+    </div>
+
+    <div class="guidance-card" id="breakGuidance">
+      <h4 id="breakGuidanceTitle"></h4>
+      <p id="breakGuidanceText"></p>
     </div>
 
                       </div>
@@ -728,22 +780,84 @@
       </div>`;
     }).join('');
 
-    // Guidance
-    const gc = document.getElementById('guidanceCard');
-    const gt = document.getElementById('guidanceTitle');
-    const gp = document.getElementById('guidanceText');
-    if (fvTotal < 2) {
-      gc.className = 'guidance-card low';
-      gt.textContent = 'Room to grow 🌱';
-      gp.textContent = 'Most people eat fewer fruits and vegetables than recommended. Even small changes — like adding a piece of fruit at breakfast or a vegetable at dinner — can make a real difference.';
-    } else if (fvTotal < 4) {
-      gc.className = 'guidance-card mid';
-      gt.textContent = 'Good foundation 👍';
-      gp.textContent = 'You\'re eating fruits and vegetables most days. Adding a little more variety — especially colorful vegetables — can help you reach recommended amounts.';
+    // ── Feedback: Fruit ──
+    const fruitCard = document.getElementById('fruitGuidance');
+    const fruitTitle = document.getElementById('fruitGuidanceTitle');
+    const fruitText  = document.getElementById('fruitGuidanceText');
+    if (fruit === 0) {
+      fruitCard.className = 'guidance-card low';
+      fruitTitle.textContent = 'Fruit: Not eaten this week 🌱';
+      fruitText.textContent  = 'You reported not eating fruit in the past week. Even adding fruit a few times a week is a great first step — fresh, frozen, and canned all count.';
+    } else if (fruit < 1) {
+      fruitCard.className = 'guidance-card mid';
+      fruitTitle.textContent = 'Fruit: Occasionally 👍';
+      fruitText.textContent  = "You're eating fruit occasionally. Aiming for at least once a day is a good goal — try adding a piece of fruit to breakfast or as a snack.";
     } else {
-      gc.className = 'guidance-card high';
-      gt.textContent = 'Great intake! 🌟';
-      gp.textContent = 'You\'re doing well with fruits and vegetables. Keep up the variety — different colors mean different nutrients and health benefits.';
+      fruitCard.className = 'guidance-card high';
+      fruitTitle.textContent = 'Fruit: Daily habit 🌟';
+      fruitText.textContent  = "You're eating fruit at least once a day — keep it up! Variety helps, so mix it up with different colors and types when you can.";
+    }
+
+    // ── Feedback: Vegetables ──
+    const vegCard  = document.getElementById('vegGuidance');
+    const vegTitle = document.getElementById('vegGuidanceTitle');
+    const vegText  = document.getElementById('vegGuidanceText');
+    if (vegTotal < 1) {
+      vegCard.className = 'guidance-card low';
+      vegTitle.textContent = 'Vegetables: Less than once a day 🌱';
+      vegText.textContent  = "You're eating vegetables less than once a day on average. Most health guidelines recommend vegetables at multiple meals each day — even small additions like a side salad or handful of carrots add up.";
+    } else if (vegTotal < 2) {
+      vegCard.className = 'guidance-card mid';
+      vegTitle.textContent = 'Vegetables: About once a day 👍';
+      vegText.textContent  = "You're eating vegetables about once a day. Adding one more serving at a different meal — like vegetables at lunch if you usually only have them at dinner — could make a real difference.";
+    } else {
+      vegCard.className = 'guidance-card high';
+      vegTitle.textContent = 'Vegetables: Multiple times a day 🌟';
+      vegText.textContent  = "You're eating vegetables multiple times a day — that's a strong habit. Keep up the variety; different colored vegetables provide different nutrients and health benefits.";
+    }
+
+    // ── Feedback: Soda ──
+    const sodaCard  = document.getElementById('sodaGuidance');
+    const sodaTitle = document.getElementById('sodaGuidanceTitle');
+    const sodaText  = document.getElementById('sodaGuidanceText');
+    if (soda === 0) {
+      sodaCard.className = 'guidance-card high';
+      sodaTitle.textContent = 'Soda: None this week 🌟';
+      sodaText.textContent  = "Great — you reported not drinking regular soda this past week. Sugar-sweetened drinks are one of the biggest sources of added sugar in the American diet, so skipping them is a real win.";
+    } else if (soda < 1) {
+      sodaCard.className = 'guidance-card mid';
+      sodaTitle.textContent = 'Soda: Occasionally 👍';
+      sodaText.textContent  = "You're drinking soda occasionally. Cutting back even a little reduces your intake of added sugar, which is linked to weight gain, diabetes, and heart disease.";
+    } else if (soda < 2) {
+      sodaCard.className = 'guidance-card low';
+      sodaTitle.textContent = 'Soda: About once a day 🌱';
+      sodaText.textContent  = "You're drinking soda about once a day. Replacing even one with water, sparkling water, or an unsweetened drink can make a meaningful difference over time.";
+    } else {
+      sodaCard.className = 'guidance-card low';
+      sodaTitle.textContent = 'Soda: Multiple times a day 🌱';
+      sodaText.textContent  = "You're drinking soda multiple times a day. This is one of the most impactful areas where a change could benefit your health — even swapping one soda a day for water is a great place to start.";
+    }
+
+    // ── Feedback: Breakfast ──
+    const breakCard  = document.getElementById('breakGuidance');
+    const breakTitle = document.getElementById('breakGuidanceTitle');
+    const breakText  = document.getElementById('breakGuidanceText');
+    if (breakf <= 2) {
+      breakCard.className = 'guidance-card low';
+      breakTitle.textContent = 'Breakfast: A few days this week 🌱';
+      breakText.textContent  = "You ate breakfast only a few days this past week. Eating breakfast regularly is linked to better energy, healthier food choices later in the day, and a more balanced diet — even something small like fruit or yogurt counts.";
+    } else if (breakf <= 4) {
+      breakCard.className = 'guidance-card mid';
+      breakTitle.textContent = 'Breakfast: Some days this week 👍';
+      breakText.textContent  = "You're eating breakfast some days. Even a small, quick breakfast on more days — like fruit, yogurt, or whole grain toast — can help you maintain energy and make healthier choices throughout the day.";
+    } else if (breakf <= 6) {
+      breakCard.className = 'guidance-card mid';
+      breakTitle.textContent = 'Breakfast: Most days this week 👍';
+      breakText.textContent  = "You're eating breakfast most days — that's a solid habit. Research links regular breakfast to better diet quality and steadier energy levels throughout the day.";
+    } else {
+      breakCard.className = 'guidance-card high';
+      breakTitle.textContent = 'Breakfast: Every day this week 🌟';
+      breakText.textContent  = "You're eating breakfast every day — consistent breakfast eating is associated with better overall diet quality and more stable energy throughout the day. Keep it up!";
     }
 
     // Org panel
@@ -751,9 +865,6 @@
     const pname = document.getElementById('participantName').value.trim();
     const today = new Date().toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' });
     const rawLetters = [1,2,3,4,5,6,7].map(i => answers[i] ? answers[i].letter : '?').join(', ');
-
-    document.getElementById('orgDate').textContent      = today;
-
 
     const surveyPayload = {
       pid, pname: pname || '(not provided)', date: today,
